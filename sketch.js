@@ -1,20 +1,50 @@
 let data;
+let position;
+let vectors;
+
 preload = () => {
     data = loadJSON('xkcd.json');
 }
 
-setup = () => {
+function setup(){
+    position = createVector(random(255), random(255), random(255));
+    vectors = getVectors(data);
     noCanvas();
-    processData();
 }
 
-processData = () => {
+function draw() {
+    let colorName;
+    colorName = findNearest(position, vectors);
+    createDiv(colorName);
+    let r = p5.Vector.random3D();
+    position.add(r.mult(50));
+    frameRate(1);
+}
+
+getVectors = (data) => {
     let vectors = {};
-    let hexes = data.colors;
-    hexes.map((hex) => {
-        console.log(color(hex.color));
+    let colors = data.colors;
+    colors.forEach((c) => {
+        let key =  c.color;
+        let rgb = color(c.hex);
+        vectors[key] = createVector(red(rgb), green(rgb), blue(rgb))
     });
-
+    return vectors;
 }
 
+findNearest = (position, vectors) => {
+    let keys = Object.keys(vectors);
+
+    keys.sort((a,b) => {
+        let d1 = distance(position, vectors[a]);
+        let d2 = distance(position, vectors[b]);
+        // console.log(`d1: ${d1}, d2: ${d2}`)
+        return d1 - d2;
+    });
+    return keys[0];
+};
+
+distance = (v1, v2) => {
+    return p5.Vector.dist(v1, v2);
+};
 
