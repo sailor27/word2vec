@@ -1,5 +1,5 @@
 let data;
-let position;
+let position; //random vector starting position
 let vectors;
 
 preload = () => {
@@ -15,9 +15,9 @@ function setup(){
 function draw() {
     let colorName;
     colorName = findNearest(position, vectors);
-    createDiv(colorName);
+    createDiv(colorName); //put div on the page for the color name
     let r = p5.Vector.random3D();
-    position.add(r.mult(50));
+    position.add(r.mult(50)); //move by increasing the value of the position bector
     frameRate(1);
 }
 
@@ -27,6 +27,7 @@ getVectors = (data) => {
     colors.forEach((c) => {
         let key =  c.color;
         let rgb = color(c.hex);
+        //create a vector using each hex value's r, g, and b values
         vectors[key] = createVector(red(rgb), green(rgb), blue(rgb))
     });
     return vectors;
@@ -46,5 +47,6 @@ findNearest = (position, vectors) => {
 
 distance = (v1, v2) => {
     return p5.Vector.dist(v1, v2);
+    //calculate the euclidian distance between position and each vector from the colors json
 };
 
