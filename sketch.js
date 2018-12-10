@@ -2,23 +2,34 @@ let data;
 let position; //random vector starting position
 let vectors;
 
+
 preload = () => {
-    data = loadJSON('xkcd.json');
+  data = loadJSON('xkcd.json');
 }
 
 function setup(){
-    position = createVector(random(255), random(255), random(255));
-    vectors = getVectors(data);
-    noCanvas();
+  position = createVector(random(255), random(255), random(255));
+  vectors = getVectors(data);
+  noCanvas();
 }
 
 function draw() {
+    let v;
     let colorName;
     colorName = findNearest(position, vectors);
-    createDiv(colorName); //put div on the page for the color name
+    let div = createDiv(colorName); //put div on the page for the color name
+    v = vectors[colorName]
+    div.style(
+      'color', `rgb(${v.x}, ${v.y}, ${v.z})`
+    );
+
     let r = p5.Vector.random3D();
-    position.add(r.mult(50)); //move by increasing the value of the position bector
-    frameRate(1);
+    r.mult(50)
+    position.add(r); //move by increasing the value of the position vector
+    position.x = constrain(position.x, 0, 255);
+    position.y = constrain(position.y, 0, 255);
+    position.z = constrain(position.z, 0, 255);
+    frameRate(2);
 }
 
 getVectors = (data) => {
